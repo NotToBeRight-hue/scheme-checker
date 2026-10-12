@@ -1,7 +1,22 @@
 import type { Resource } from "./api";
 
 export function displayText(value: unknown): string {
-  return String(value ?? "").replace(/\u2014/g, ";");
+  return String(value ?? "")
+    .replace(/\s*FICTIONAL \/ DEMO ONLY\. Not a government programme or available financial assistance\./g, "")
+    .replace(/\s*[\u2014;] invented demonstration amount only\. No payout or entitlement\./g, "")
+    .replace(/^FICTIONAL \/ DEMO ONLY\. /, "")
+    .replace(/ No application or official verification occurs\./g, "")
+    .replace(/ Fictional demonstration only\./g, "")
+    .replace(/^Demo: /, "")
+    .replace(/\u2014/g, ";");
+}
+
+export const schemeNames = ["Student Education Support", "Women Higher Education Grant", "Farmer Family Assistance", "Senior Citizen Welfare Support", "Youth Skill Development Grant", "Disability Education Assistance", "Small Business Startup Support", "School Excellence Scholarship"];
+
+export function schemeDisplayName(value: unknown): string {
+  const name = String(value ?? "");
+  const clean = name.replace(/^FICTIONAL \/ DEMO ONLY: /, "");
+  return schemeNames.includes(clean) ? clean : name;
 }
 
 export function pdfDemoSchemes(schemes: Resource[]): Resource[] {

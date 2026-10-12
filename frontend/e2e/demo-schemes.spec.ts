@@ -18,16 +18,16 @@ for(const item of cases) test(`PDF demo: ${item.name}`,async({page})=>{
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Browse schemes',exact:true}).click();
  await expect(page.getByText('Synthetic Demo: Learning Support',{exact:true})).toHaveCount(0);
  await page.getByLabel('Search schemes').fill(item.name);await page.getByRole('link',{name:'View scheme',exact:true}).click();
- await expect(page.getByRole('heading',{name:`FICTIONAL / DEMO ONLY: ${item.name}`,exact:true})).toBeVisible();await expect(page.getByText(item.benefit,{exact:false})).toBeVisible();await expect(page.getByText('Required documents (display-only)',{exact:false})).toBeVisible();
+ await expect(page.getByRole('heading',{name:item.name,exact:true})).toBeVisible();await expect(page.getByText(item.benefit,{exact:false})).toBeVisible();await expect(page.getByText('Required documents (display-only)',{exact:false})).toBeVisible();
  for(const [name,value] of Object.entries(item.answers)){
-  const field=page.getByLabel('Demo: '+name,{exact:true});if(await field.evaluate(el=>el.tagName==='SELECT'))await field.selectOption(String(value));else await field.fill(String(value));
+  const field=page.getByLabel(''+name,{exact:true});if(await field.evaluate(el=>el.tagName==='SELECT'))await field.selectOption(String(value));else await field.fill(String(value));
  }
  const save=async()=>{await page.getByRole('button',{name:'Save answers',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Answers saved'})).toBeVisible();};
  const check=async()=>{await page.getByRole('button',{name:'Check eligibility',exact:true}).click();};
  await save();await check();await expect(page.getByText('ELIGIBLE',{exact:true})).toBeVisible();await expect(page.locator('tbody tr')).toHaveCount(Object.keys(item.answers).length);
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Browse schemes',exact:true}).click();await page.getByLabel('Search schemes').fill(item.name);await page.getByRole('link',{name:'View scheme',exact:true}).click();
- const bad=page.getByLabel('Demo: '+item.bad,{exact:true});await bad.selectOption(item.bad==='State of residence'?'MH':item.bad==='Occupation'||item.bad==='Current class'?'other':'false');await save();await check();await expect(page.getByText('NOT ELIGIBLE',{exact:true})).toBeVisible();
+ const bad=page.getByLabel(''+item.bad,{exact:true});await bad.selectOption(item.bad==='State of residence'?'MH':item.bad==='Occupation'||item.bad==='Current class'?'other':'false');await save();await check();await expect(page.getByText('NOT ELIGIBLE',{exact:true})).toBeVisible();
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Browse schemes',exact:true}).click();await page.getByLabel('Search schemes').fill(item.name);await page.getByRole('link',{name:'View scheme',exact:true}).click();
- await page.getByLabel('Demo: '+item.bad,{exact:true}).selectOption('');await save();await check();await expect(page.getByRole('alert')).toContainText('Complete the missing');
+ await page.getByLabel(''+item.bad,{exact:true}).selectOption('');await save();await check();await expect(page.getByRole('alert')).toContainText('Complete the missing');
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Check history',exact:true}).click();await expect(page.getByRole('link',{name:'View explanation'})).toHaveCount(2);expect(errors).toEqual([]);
 });

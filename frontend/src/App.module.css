@@ -22,7 +22,6 @@
 .sidebar nav a { padding:12px 14px; border:1px solid transparent; border-radius:5px; color:var(--muted); text-decoration:none; font-weight:500; }
 .sidebar nav a:hover { background:var(--surface-muted); color:var(--text); }
 .sidebar nav a[aria-current="page"] { background:var(--surface-muted); color:var(--accent); border-color:var(--border); font-weight:700; border-left:3px solid var(--accent); }
-.sidebarNote { color:var(--muted); font-size:.78rem; border-top:1px solid var(--border); padding:20px 12px; margin-top:30px; }
 .main { grid-column:2; padding:28px; max-width:1550px; width:100%; margin:0 auto; }
 .footer { grid-column:2; border-top:1px solid var(--border); padding:20px 28px; }
 .signedOut { grid-template-columns:minmax(0,1fr); }
@@ -38,7 +37,6 @@
 .heroContent > p { color:var(--muted); max-width:500px; }
 .heroArtwork { width:46%; max-width:566px; flex-shrink:0; }
 .heroArtwork img { width:100%; height:auto; border-radius:7px; }
-.heroDisclaimer { font-size:.78rem; }
 .actions { display:flex; flex-wrap:wrap; gap:9px; margin:18px 0; }
 .primaryLink,.secondaryLink { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:.75rem 1rem; border-radius:5px; border:1px solid var(--accent); font-weight:600; text-decoration:none; }
 .primaryLink { background:var(--accent); color:var(--on-accent); }
@@ -90,7 +88,6 @@
 .filters { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 18px; margin:24px 0; }
 .notice { border-left:3px solid var(--accent); padding:1rem; background:var(--surface-muted); border-radius:3px; font-size:.9rem; }
 .secondary { background:var(--surface); color:var(--accent); }
-.badge { display:inline-block; border:1px solid var(--border); border-radius:3px; font-size:.68rem; padding:.2rem .4rem; color:var(--muted); line-height:1.4; background:var(--surface-muted); }
 .pager { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin:1.5rem 0; flex-wrap:wrap; }
 .tableWrap { overflow-x:auto; max-width:100%; }
 .tableWrap table { display:table; min-width:590px; }

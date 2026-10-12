@@ -41,15 +41,13 @@ test("citizen registration, profile, discovery, explanations, history, suggestio
     page.getByRole("status").filter({ hasText: "Profile saved" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Browse schemes", exact: true }).click();
-  await expect(
-    page.getByText("Fictional synthetic demo").first(),
-  ).toBeVisible();
+
   await page.getByLabel("Search schemes").fill("Student Education Support");
   await page.getByRole("link", { name: "View scheme", exact: true }).click();
-  await page.getByLabel("Demo: Age (integer years)").fill("25");
-  await page.getByLabel("Demo: State of residence").selectOption("TN");
-  await page.getByLabel("Demo: Currently enrolled in college").selectOption("true");
-  await page.getByLabel("Demo: Annual family income (decimal INR)").fill("300000");
+  await page.getByLabel("Age (integer years)").fill("25");
+  await page.getByLabel("State of residence").selectOption("TN");
+  await page.getByLabel("Currently enrolled in college").selectOption("true");
+  await page.getByLabel("Annual family income (decimal INR)").fill("300000");
   await page.getByRole("button", { name: "Save answers", exact: true }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "Answers saved" }),

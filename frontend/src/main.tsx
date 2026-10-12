@@ -4,14 +4,11 @@ import { createRoot } from "react-dom/client";
 
 import { api, bootstrapCsrf, ApiError, type Resource as R } from "./api";
 import { ExactJsonBody, exactRuleBody } from "./exact-json";
-import { displayText, pdfDemoSchemes, matchingOverview } from "./ui-model";
+import { displayText, schemeDisplayName, pdfDemoSchemes, matchingOverview } from "./ui-model";
 
 import s from "./App.module.css";
 
 import "./theme.css";
-
-const disclaimer =
-  "Preliminary screening only. This prototype is not affiliated with the government and does not confirm entitlement or submit applications.";
 
 const states = [
   "AN",
@@ -123,7 +120,7 @@ function Field({
   const id = useId();
   return (
     <div className={s.field}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{displayText(label)}</label>
       {options ? (
         <select
           id={id}
@@ -252,7 +249,7 @@ function App() {
         <a className={s.brand} href="#dashboard" aria-label="Government Scheme Selector home">
           <span className={s.logoFrame}><img className={s.lightAsset} src="/assets/logo_light.png" alt="Government Scheme Selector" /><img className={s.darkAsset} src="/assets/logo_dark.png" alt="Government Scheme Selector" /></span>
         </a>
-        <div className={s.workspaceLabel}>Eligibility assistance prototype</div>
+        <div className={s.workspaceLabel}>Eligibility assistance</div>
         {user && <a className={s.userIdentity} href="#profile" aria-label={"Open profile for " + user.fullName}><span className={s.avatar} aria-hidden="true">{user.fullName.split(/\s+/).map((part: string) => part[0]).slice(0, 2).join("")}</span><span>{user.fullName}<small>Your profile</small></span></a>}
         <button className={s.themeButton} onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
           {theme === "dark" ? "Light theme" : "Dark theme"}
@@ -280,7 +277,7 @@ function App() {
             ["dashboard", "Dashboard"],
             ["profile", "My profile"],
             ["schemes", "Browse schemes"],
-            ["matching", "Match demo schemes"],
+            ["matching", "Match schemes"],
             ["schemes", "Individual eligibility"],
             ["history", "Check history"],
             ["suggestions", "Suggestions"],
@@ -294,14 +291,14 @@ function App() {
               {l}
             </a>
           ))}
-        </nav><p className={s.sidebarNote}>Fictional demonstration<br />Preliminary screening only</p></aside>
+        </nav></aside>
       )}
       <main id="content" className={s.main} tabIndex={-1} aria-busy={pending > 0}>
         {error && <p role="alert">{error}</p>}
         {pending > 0 && <p role="status">Saving changes...</p>}
         {loading ? (
           <p role="status">Connecting to your session...</p>
-        ) : !user ? (
+        ) : view === "about" ? (<section><h1>About</h1><p>Scheme information is illustrative and is not an official government benefit program.</p><a href="#dashboard">Return to dashboard</a></section>) : !user ? (
           <Auth login={u=>{setUser(u);setError('');location.hash='dashboard';setView('dashboard');}} />
         ) : view === "dashboard" ? (
           <Dashboard user={user} preview={lastMatching} />
@@ -327,7 +324,7 @@ function App() {
           </p>
         )}
       </main>
-      <footer className={s.footer}>{disclaimer}</footer>
+      <footer className={s.footer}><a href="#about">About</a></footer>
     </div>
   );
 }
@@ -345,11 +342,7 @@ export function Auth({ login }: { login: (u: R) => void }) {
         Browse published schemes, check your details against their rules and see
         the reasons for each result.
       </p>
-      <p className={s.notice}>
-        The local demonstration catalog contains fictional synthetic schemes.
-        These are not real government programmes.
-      </p>
-      <h2>{register ? "Create a citizen account" : "Sign in"}</h2>
+<h2>{register ? "Create a citizen account" : "Sign in"}</h2>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -416,7 +409,7 @@ function Checks({ rows }: { rows: R[] }) {
     <div className={s.grid}>
       {rows.map((e) => (
         <section key={e.id}>
-          <h3>{e.snapshot?.schemeName || "Scheme " + e.schemeId}</h3>
+          <h3>{schemeDisplayName(e.snapshot?.schemeName || "Scheme " + e.schemeId)}</h3>
           <p>{e.verdict.replaceAll("_", " ")}</p>
           <p>
             {e.evaluationDate} ·{" "}
@@ -434,8 +427,8 @@ function Checks({ rows }: { rows: R[] }) {
 function SchemeCard({ scheme, categories, heading = "h3" }: { scheme: R; categories: R[]; heading?: "h2" | "h3" }) {
   const Heading = heading;
   return <section className={s.schemeCard}>
-    <div className={s.cardHeading}><span className={s.category}>{categories.find(category => category.id === scheme.categoryId)?.name || "Category unavailable"}</span><Badge demo={scheme.synthetic} /></div>
-    <Heading>{displayText(scheme.name)}</Heading>
+    <div className={s.cardHeading}><span className={s.category}>{categories.find(category => category.id === scheme.categoryId)?.name || "Category unavailable"}</span></div>
+    <Heading>{schemeDisplayName(scheme.name)}</Heading>
     <p className={s.benefit}>{displayText(scheme.benefits)}</p>
     <p className={s.schemeDescription}>{displayText(scheme.description)}</p>
     <p className={s.scope}>{scheme.stateCode || "National scope"}</p>
@@ -450,9 +443,8 @@ export function Dashboard({ user, preview = null }: { user: R; preview?: R | nul
   return <>
     <p className={s.eyebrow}>CITIZEN DASHBOARD</p>
     <section className={s.hero}>
-      <div className={s.heroContent}><h1>Welcome, {user.fullName}</h1><p>Review your answers and explore the fictional demonstration schemes.</p>
+      <div className={s.heroContent}><h1>Welcome, {user.fullName}</h1><p>Review your answers and find schemes that match your circumstances.</p>
         <div className={s.actions}><a className={s.primaryLink} href="#matching">Start Matching</a><a className={s.secondaryLink} href="#schemes">Browse All Schemes</a></div>
-        <p className={s.heroDisclaimer}>FICTIONAL / DEMO ONLY. No government affiliation or entitlement.</p>
       </div>
       <div className={s.heroArtwork}><img className={s.lightAsset} src="/assets/hero_light.png" alt="Government building illustration in daylight" /><img className={s.darkAsset} src="/assets/hero_dark.png" alt="Government building illustration at night" /></div>
     </section>
@@ -462,16 +454,15 @@ export function Dashboard({ user, preview = null }: { user: R; preview?: R | nul
           {[["Eligible schemes", overview.eligible, "eligible"], ["Not eligible schemes", overview.notEligible, "negative"], ["Need more information", overview.needsInformation, "unknown"], ["Total schemes evaluated", overview.total, "total"]].map(([label, count, style]) => <div className={s.overviewTile} data-status={style} key={label}><span>{label}</span><strong>{count}</strong></div>)}
         </div> : <div className={s.overviewEmpty}><p>{preview ? "Your answers or published rules have changed. Run matching again for current results." : "No matching preview in this session yet."}</p><p>Start matching to see your overview. Previews do not add eligibility history.</p><a href="#matching">Start matching now</a></div>}
       </section>
-      <div className={s.sectionHeading}><h2>Featured demo schemes</h2><a href="#schemes">Browse all</a></div>
-      <p className={s.muted}>Fictional scheme benefits are for demonstration only.</p>
-      <Load {...catalog}><Load {...categories}>{!featured.length ? <section><p>No published PDF demo schemes are available.</p></section> : <div className={s.featuredGrid}>{featured.map(scheme => <SchemeCard key={scheme.id} scheme={scheme} categories={categories.data || []} />)}</div>}</Load></Load>
+      <div className={s.sectionHeading}><h2>Featured schemes</h2><a href="#schemes">Browse all</a></div>
+      <Load {...catalog}><Load {...categories}>{!featured.length ? <section><p>No published schemes are available.</p></section> : <div className={s.featuredGrid}>{featured.map(scheme => <SchemeCard key={scheme.id} scheme={scheme} categories={categories.data || []} />)}</div>}</Load></Load>
     </div><aside className={s.rightPanels} aria-label="Profile, activity and help">
       <section><h2>Your profile</h2><p className={s.profileName}>{user.fullName}</p><p className={s.muted}>{user.email}</p>
         <Load {...dashboard}><p>{dashboard.data?.profileCompleteness}% complete</p><progress max={100} value={dashboard.data?.profileCompleteness} /></Load>
         <Load {...profile}><dl className={s.profileSummary}>{[["State", profile.data?.profile.stateCode], ["Education", profile.data?.profile.educationLevel], ["Occupation", profile.data?.profile.occupation], ["Annual income", profile.data?.profile.annualIncome == null ? null : "INR " + profile.data.profile.annualIncome]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || "Not provided"}</dd></div>)}</dl></Load><a href="#profile">Complete or update profile</a>
       </section>
       <section><div className={s.sectionHeading}><h2>Recent activity</h2><a href="#history">View history</a></div><Load {...dashboard}>
-        {!dashboard.data?.recentChecks.length ? <p className={s.muted}>No individual checks yet. Matching previews are not recorded here.</p> : <ol className={s.recentActivity}>{dashboard.data.recentChecks.map((entry: R) => <li key={entry.id}><a href={"#evaluation/" + entry.id}>{displayText(entry.snapshot?.schemeName || "Scheme " + entry.schemeId)}</a><span>{entry.verdict.replaceAll("_", " ")} | {entry.evaluationDate}</span>{entry.stale && <span>Stale: {entry.staleReasons.join(", ")}</span>}</li>)}</ol>}
+        {!dashboard.data?.recentChecks.length ? <p className={s.muted}>No individual checks yet. Matching previews are not recorded here.</p> : <ol className={s.recentActivity}>{dashboard.data.recentChecks.map((entry: R) => <li key={entry.id}><a href={"#evaluation/" + entry.id}>{schemeDisplayName(entry.snapshot?.schemeName || "Scheme " + entry.schemeId)}</a><span>{entry.verdict.replaceAll("_", " ")} | {entry.evaluationDate}</span>{entry.stale && <span>Stale: {entry.staleReasons.join(", ")}</span>}</li>)}</ol>}
         <p>{dashboard.data?.evaluationCount} completed checks</p><p>{dashboard.data?.pendingSuggestions} suggestions awaiting review</p>
       </Load></section>
       <section className={s.helpPanel}><h2>Need help?</h2><p>Leave uncertain answers as Unknown. Review each explanation before choosing an individual check.</p><a href="#matching">Open shared questionnaire</a><a href="#schemes">Choose a scheme to check</a><a href="#suggestions">Suggest a scheme or correction</a></section>
@@ -634,14 +625,6 @@ function Catalog() {
   );
 }
 
-function Badge({ demo }: { demo: boolean }) {
-  return (
-    <span className={s.badge}>
-      {demo ? "Fictional synthetic demo" : "Verified source scheme"}
-    </span>
-  );
-}
-
 function RuleView({ rule, labels = {} }: { rule: R; labels?: Record<string, string> }) {
   return !rule ? null : rule.type === "GROUP" ? (
     <div className={s.rule}>
@@ -654,7 +637,7 @@ function RuleView({ rule, labels = {} }: { rule: R; labels?: Record<string, stri
     </div>
   ) : (
     <p>
-      {labels[rule.field] || rule.field} {rule.operator} {JSON.stringify(rule.value)}
+      {displayText(labels[rule.field] || rule.field)} {rule.operator} {JSON.stringify(rule.value)}
     </p>
   );
 }
@@ -671,7 +654,7 @@ function QuestionInput({
   if (q.type === "MULTI_SELECT")
     return (
       <fieldset>
-        <legend>{q.label}</legend>
+        <legend>{displayText(q.label)}</legend>
         {q.options.map((o: string) => (
           <label key={o}>
             <input
@@ -692,7 +675,7 @@ function QuestionInput({
     );
   return (
     <Field
-      label={q.label}
+      label={displayText(q.label)}
       value={
         q.type === "BOOLEAN" ? (value == null ? "" : String(value)) : value
       }
@@ -737,12 +720,11 @@ export function Matching({ onPreview }: { onPreview?: (result: R | null) => void
     setResult(response); onPreview?.(response);
   }
   return <>
-    <h1>Match demo schemes</h1>
-    <p className={s.notice}>FICTIONAL / DEMO ONLY. These eight schemes and benefits are invented. No money, government approval or application is offered.</p>
+    <h1>Match schemes</h1>
     <p>Answer the shared questions once. Your saved answers are reused in individual scheme checks. Profile fields are not substituted for these answers. Matching previews do not save eligibility history.</p>
     <Load {...questionnaire}>
       {error && <p role="alert">{error}</p>}
-      <form aria-label="Shared demo questionnaire" onSubmit={async e => {
+      <form aria-label="Shared questionnaire" onSubmit={async e => {
         e.preventDefault(); setBusy(true); setError(""); setResult(null); onPreview?.(null);
         try {
           const saved = await api("/matching/answers", "PUT", {
@@ -769,13 +751,12 @@ export function Matching({ onPreview }: { onPreview?: (result: R | null) => void
     </Load>
     {result && <section aria-label="Matching results">
       <h2>Matching results</h2>
-      <p>{result.disclaimer}</p>
-      <div className={s.grid}>{result.results.map((row: R) => <section key={row.schemeId} aria-label={row.schemeName} data-classification={row.classification}>
-        <h3>{row.schemeName}</h3><Badge demo={row.synthetic} />
+      <div className={s.grid}>{result.results.map((row: R) => <section key={row.schemeId} aria-label={schemeDisplayName(row.schemeName)} data-classification={row.classification}>
+        <h3>{schemeDisplayName(row.schemeName)}</h3>
         <p className={s.benefit}>{displayText(row.benefits)}</p><p><strong>{row.classification.replaceAll("_", " ")}</strong></p>
-        {row.classification === "NEEDS_INFORMATION" && <><p>Missing questions:</p><ul>{row.missingQuestions.map((q: R) => <li key={q.fieldKey}>{q.label}</li>)}</ul></>}
-        {row.classification === "NOT_ELIGIBLE" && <><p>Conditions not met:</p><ul>{row.explanations.filter((e: R) => e.result === "FALSE").map((e: R) => <li key={e.nodeId}>{e.questionLabel}: expected {e.operator} {JSON.stringify(e.expectedValue)}; answered {JSON.stringify(e.actualValue)}.</li>)}</ul></>}
-        <details><summary>Every evaluated condition</summary><ul>{row.explanations.map((e: R) => <li key={e.nodeId}>{e.questionLabel}: {e.operator} {JSON.stringify(e.expectedValue)}; answered {e.actualValue == null ? "Unknown" : JSON.stringify(e.actualValue)}; {e.result}.</li>)}</ul></details>
+        {row.classification === "NEEDS_INFORMATION" && <><p>Missing questions:</p><ul>{row.missingQuestions.map((q: R) => <li key={q.fieldKey}>{displayText(q.label)}</li>)}</ul></>}
+        {row.classification === "NOT_ELIGIBLE" && <><p>Conditions not met:</p><ul>{row.explanations.filter((e: R) => e.result === "FALSE").map((e: R) => <li key={e.nodeId}>{displayText(e.questionLabel)}: expected {e.operator} {JSON.stringify(e.expectedValue)}; answered {JSON.stringify(e.actualValue)}.</li>)}</ul></>}
+        <details><summary>Every evaluated condition</summary><ul>{row.explanations.map((e: R) => <li key={e.nodeId}>{displayText(e.questionLabel)}: {e.operator} {JSON.stringify(e.expectedValue)}; answered {e.actualValue == null ? "Unknown" : JSON.stringify(e.actualValue)}; {e.result}.</li>)}</ul></details>
         <p>Published rule version {row.ruleVersionId}</p>
         <a href={"#scheme/" + row.schemeId}>View scheme and check individually</a>
       </section>)}</div>
@@ -802,8 +783,8 @@ function Detail({ id }: { id: string }) {
     <>
       <a href="#schemes">Back to catalog</a>
       <Load {...l}>
-        <h1>{l.data?.name}</h1>
-        <Badge demo={l.data?.synthetic} />
+        <h1>{schemeDisplayName(l.data?.name)}</h1>
+
         <p>{displayText(l.data?.description)}</p>
         <div className={s.grid}>
           <section>
@@ -939,7 +920,7 @@ function Evaluation({ id }: { id: string }) {
       <h1>Eligibility explanation</h1>
       <Load {...l}>
         <section>
-          <h2>{l.data?.snapshot?.schemeName}</h2>
+          <h2>{schemeDisplayName(l.data?.snapshot?.schemeName)}</h2>
           <p className={s.verdict} data-verdict={l.data?.verdict}>{l.data?.verdict.replaceAll("_", " ")}</p>
           <p>
             Rule version {l.data?.ruleVersionId} · Profile revision{" "}
@@ -951,7 +932,6 @@ function Evaluation({ id }: { id: string }) {
               current details.
             </p>
           )}
-          <p>{disclaimer}</p>
           <div className={s.tableWrap}>
             <table>
               <caption>Every evaluated condition</caption>
@@ -967,7 +947,7 @@ function Evaluation({ id }: { id: string }) {
               <tbody>
                 {l.data?.explanations.map((x: R) => (
                   <tr key={x.nodeId}>
-                    <td>{labels[x.fieldKey] || x.fieldKey}</td>
+                    <td>{displayText(labels[x.fieldKey] || x.fieldKey)}</td>
                     <td>{x.operator}</td>
                     <td>{JSON.stringify(x.expectedValue)}</td>
                     <td>
@@ -1060,7 +1040,7 @@ function Suggestions() {
               set={(v) => change("schemeId", v)}
               options={[
                 ["", "Select scheme"],
-                ...(schemes.data?.items || []).map((x: R) => [x.id, x.name]),
+                ...(schemes.data?.items || []).map((x: R) => [x.id, schemeDisplayName(x.name)]),
               ]}
               required
             />
@@ -1099,8 +1079,8 @@ function Suggestions() {
           l.data.items.map((x: R) => (
             <section key={x.id}>
               <h3>
-                {x.schemeName ||
-                  "Criterion correction for scheme " + x.schemeId}
+                {schemeDisplayName(x.schemeName ||
+                  "Criterion correction for scheme " + x.schemeId)}
               </h3>
               <p>{x.description}</p>
               <p>Status: {x.status.replaceAll("_", " ")}</p>
@@ -1291,7 +1271,7 @@ function AdminSchemes() {
         <div className={s.grid}>
           {l.data?.map((x: R) => (
             <section key={x.id}>
-              <h3>{x.name}</h3>
+              <h3>{schemeDisplayName(x.name)}</h3>
               <p>
                 {x.publishedVersionId
                   ? "Published version " + x.publishedVersionId
@@ -1371,7 +1351,7 @@ function AdminSchemes() {
                 checked={record.synthetic}
                 onChange={(e) => change("synthetic", e.target.checked)}
               />
-              Fictional synthetic development scheme
+              Development-only scheme (excluded in production)
             </label>
             <Field
               label="Official HTTPS source URL"
@@ -1417,7 +1397,7 @@ function AdminSchemes() {
                       )
                     }
                   />
-                  {q.id}: {q.label}
+                  {q.id}: {displayText(q.label)}
                 </label>
               ))}
             </fieldset>
@@ -1571,7 +1551,7 @@ export function AdminQuestions() {
               setOptions(JSON.stringify(x.options));
             }}
           >
-            {x.id}: {x.label}
+            {x.id}: {displayText(x.label)}
           </button>
         ))}
       </Load>
@@ -1666,7 +1646,7 @@ function AdminReviews() {
         ) : (
           l.data.items.map((x: R) => (
             <section key={x.id}>
-              <h3>{x.schemeName || x.type + " for scheme " + x.schemeId}</h3>
+              <h3>{schemeDisplayName(x.schemeName || x.type + " for scheme " + x.schemeId)}</h3>
               <p>{x.description}</p>
               <p>{x.status}</p>
               <button
