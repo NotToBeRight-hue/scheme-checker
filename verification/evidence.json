@@ -1,0 +1,138 @@
+{
+  "date": "2026-10-12",
+  "timezone": "Asia/Kolkata",
+  "runtime": {
+    "java": "17.0.19",
+    "node": "24.21.0",
+    "mysql": "8.4.11",
+    "mavenWrapper": "3.3.4",
+    "maven": "3.9.11",
+    "springBoot": "4.1.1"
+  },
+  "junit": [
+    {
+      "name": "in.project.schemes.ApiIntegrationTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "publicationAtomicImmutableAndDraftRevisionConflict",
+        "concurrentPublicationExactlyOneSucceeds",
+        "duplicateUnrelatedAndInvalidAnswersRejected",
+        "accountRateLimit",
+        "staleProfileUpdateRejected",
+        "acceptedSuggestionConversionCreatesOnlyDraft",
+        "currentUserStatusRecheckedForEveryJwtRequest",
+        "csrfBootstrapAndActualHeader",
+        "genuineUnverifiedSchemeCannotPublish",
+        "backendRbacAndAnonymousProtection",
+        "concurrentProfileUpdateExactlyOneSucceeds",
+        "historyOwnershipSnapshotAndStaleness",
+        "registrationLoginLogoutAndNoJwtJson",
+        "demoSeedsExplicitlyFictional",
+        "invalidJwtRejected",
+        "categoryQuestionMetadataAndDraftWorkflows",
+        "concurrentEvaluationAndProfileUpdateRemainConsistent",
+        "expiredJwtRejected",
+        "criticalUnknown422CreatesNoHistory",
+        "profileCatalogValidationAndDashboard",
+        "suggestionsIsolatedAndAcceptanceDoesNotPublish",
+        "staleEvaluation409CreatesNoHistory",
+        "publicSignupCannotChooseAdminAndDbConstraintsHold",
+        "typedAnswerStorageAndQuestionValidation",
+        "migrationsExactlyElevenDomainTables",
+        "csrfRequiredForProfileMutation",
+        "ipRateLimit",
+        "sharedAnswersPreservedAndConflictRejected",
+        "csrfRequiredForAllAuthMutations"
+      ]
+    },
+    {
+      "name": "in.project.schemes.RuleEngineTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "duplicateNodesRejected",
+        "gteEqualTrue",
+        "typeMismatchRejected",
+        "multiSelectConditionsRejected",
+        "ltEqualFalseLowerTrue",
+        "fourGroupLevelsRejected",
+        "gtEqualFalseGreaterTrue",
+        "lteEqualTrue",
+        "exactBigDecimalBoundary",
+        "notInAbsentTrue",
+        "orUnknownWithoutTrue",
+        "andFalseDominates",
+        "andAllTrue",
+        "frozenFixtureDate",
+        "betweenInsideTrue",
+        "neUnequalTrue",
+        "threeGroupLevelsAccepted",
+        "unsupportedOperatorRejected",
+        "eqEqualTrue",
+        "leapDayAgeUsesMarchFirst",
+        "allLeavesExplainedAfterDefinitiveOutcome",
+        "unlinkedQuestionRejected",
+        "inMemberTrue",
+        "andUnknownWithoutFalse",
+        "betweenInclusiveEndpoints",
+        "orTrueDominates",
+        "orAllFalse",
+        "emptyGroupsRejected",
+        "nestedTruthTable",
+        "criticalMissingInputUnknown"
+      ]
+    }
+  ],
+  "vitest": {
+    "tests": 4,
+    "passed": 4,
+    "files": 2
+  },
+  "playwright": {
+    "startTime": "2026-10-12T16:12:10.511Z",
+    "duration": 10233.082,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coveragePercent": {
+    "RuleEngine": {
+      "instruction": 91.63,
+      "branch": 81.56,
+      "line": 100.0
+    },
+    "Api": {
+      "instruction": 88.2,
+      "branch": 62.42,
+      "line": 98.59
+    },
+    "SessionTokens": {
+      "instruction": 93.44,
+      "branch": 65.38,
+      "line": 100.0
+    },
+    "ALL": {
+      "instruction": 85.04,
+      "branch": 66.99,
+      "line": 93.2
+    }
+  },
+  "schema": {
+    "domainTables": 11,
+    "infrastructureTables": 1
+  },
+  "unrun": [
+    "Docker Compose runtime",
+    "Testcontainers runtime",
+    "HTTPS deployment",
+    "extended 88 deferred cases",
+    "full WCAG audit",
+    "distributed rate limiter/load testing"
+  ]
+}

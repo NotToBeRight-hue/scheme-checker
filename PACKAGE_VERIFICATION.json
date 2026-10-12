@@ -1,0 +1,38 @@
+{
+  "packageVersion": "3.0",
+  "sourceStatus": "IMPLEMENTED AND LOCALLY VERIFIED PROTOTYPE",
+  "authoritativeMaster": "docs/MASTER_SPEC.md",
+  "domainTables": [
+    "users",
+    "user_profiles",
+    "profile_answers",
+    "scheme_categories",
+    "schemes",
+    "questions",
+    "scheme_questions",
+    "scheme_rule_versions",
+    "eligibility_evaluations",
+    "admin_audit_logs",
+    "scheme_suggestions"
+  ],
+  "domainTableCount": 11,
+  "coreRuleCasesSpecified": 24,
+  "verificationDate": "2026-10-12",
+  "evidence": "verification/evidence.json",
+  "passed": {
+    "junit": 59,
+    "vitest": 4,
+    "playwright": 8,
+    "mysqlMigrations": true,
+    "frontendBuild": true,
+    "backendBuild": true
+  },
+  "unrun": [
+    "Docker Compose runtime",
+    "Testcontainers runtime",
+    "HTTPS deployment",
+    "extended 88 deferred cases",
+    "full WCAG audit",
+    "distributed rate limiter/load testing"
+  ]
+}

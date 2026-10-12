@@ -1,0 +1,464 @@
+{
+  "specification": "eight-demo-pdf-v1",
+  "questions": {
+    "age": {
+      "label": "Demo: Age (integer years)",
+      "type": "NUMBER",
+      "options": [],
+      "active": true,
+      "integer": true
+    },
+    "state": {
+      "label": "Demo: State of residence",
+      "type": "SELECT",
+      "options": [
+        "TN",
+        "AP",
+        "AR",
+        "AS",
+        "BR",
+        "CG",
+        "GA",
+        "GJ",
+        "HR",
+        "HP",
+        "JH",
+        "KA",
+        "KL",
+        "MP",
+        "MH",
+        "MN",
+        "ML",
+        "MZ",
+        "NL",
+        "OD",
+        "PB",
+        "RJ",
+        "SK",
+        "TS",
+        "TR",
+        "UP",
+        "UK",
+        "WB",
+        "AN",
+        "CH",
+        "DN",
+        "DL",
+        "JK",
+        "LA",
+        "LD",
+        "PY"
+      ],
+      "active": true
+    },
+    "income": {
+      "label": "Demo: Annual family income (decimal INR)",
+      "type": "NUMBER",
+      "options": [],
+      "active": true
+    },
+    "college": {
+      "label": "Demo: Currently enrolled in college",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "gender": {
+      "label": "Demo: Gender",
+      "type": "SELECT",
+      "options": [
+        "female",
+        "male",
+        "other"
+      ],
+      "active": true
+    },
+    "higher": {
+      "label": "Demo: Higher education enrollment",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "occupation": {
+      "label": "Demo: Occupation",
+      "type": "SELECT",
+      "options": [
+        "farmer",
+        "other"
+      ],
+      "active": true
+    },
+    "unemployed": {
+      "label": "Demo: Currently unemployed",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "training": {
+      "label": "Demo: Skill training enrollment",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "disability": {
+      "label": "Demo: Certified disability percentage (0-100)",
+      "type": "NUMBER",
+      "options": [],
+      "active": true,
+      "min": "0",
+      "max": "100"
+    },
+    "studying": {
+      "label": "Demo: Currently studying",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "first": {
+      "label": "Demo: First-time entrepreneur",
+      "type": "BOOLEAN",
+      "options": [],
+      "active": true
+    },
+    "class": {
+      "label": "Demo: Current class",
+      "type": "SELECT",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "other"
+      ],
+      "active": true
+    },
+    "marks": {
+      "label": "Demo: Previous exam percentage (0-100)",
+      "type": "NUMBER",
+      "options": [],
+      "active": true,
+      "min": "0",
+      "max": "100"
+    }
+  },
+  "schemes": [
+    {
+      "name": "Student Education Support",
+      "category": "Education",
+      "benefit": "Rs 12,000/year",
+      "description": "Financial support for eligible college students.",
+      "questions": [
+        "age",
+        "state",
+        "college",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "age",
+          "operator": "BETWEEN",
+          "value": [
+            "18",
+            "25"
+          ]
+        },
+        {
+          "question": "state",
+          "operator": "EQ",
+          "value": "TN"
+        },
+        {
+          "question": "college",
+          "operator": "EQ",
+          "value": true
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "300000"
+        }
+      ],
+      "documents": [
+        "Age proof",
+        "College bonafide certificate",
+        "Income certificate",
+        "Residence proof"
+      ],
+      "page": 2
+    },
+    {
+      "name": "Women Higher Education Grant",
+      "category": "Education",
+      "benefit": "Rs 15,000/year",
+      "description": "Support for female students pursuing higher education.",
+      "questions": [
+        "gender",
+        "age",
+        "higher",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "gender",
+          "operator": "EQ",
+          "value": "female"
+        },
+        {
+          "question": "age",
+          "operator": "BETWEEN",
+          "value": [
+            "18",
+            "30"
+          ]
+        },
+        {
+          "question": "higher",
+          "operator": "EQ",
+          "value": true
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "400000"
+        }
+      ],
+      "documents": [
+        "Identity proof",
+        "College enrollment certificate",
+        "Income certificate"
+      ],
+      "page": 3
+    },
+    {
+      "name": "Farmer Family Assistance",
+      "category": "Agriculture",
+      "benefit": "Rs 8,000/year",
+      "description": "Illustrative financial assistance for farming households.",
+      "questions": [
+        "occupation",
+        "age",
+        "state",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "occupation",
+          "operator": "EQ",
+          "value": "farmer"
+        },
+        {
+          "question": "age",
+          "operator": "GTE",
+          "value": "21"
+        },
+        {
+          "question": "state",
+          "operator": "EQ",
+          "value": "TN"
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "250000"
+        }
+      ],
+      "documents": [
+        "Identity proof",
+        "Residence proof",
+        "Income certificate",
+        "Farming occupation declaration"
+      ],
+      "page": 4
+    },
+    {
+      "name": "Senior Citizen Welfare Support",
+      "category": "Social Welfare",
+      "benefit": "Rs 1,500/month",
+      "description": "Illustrative monthly assistance for senior citizens.",
+      "questions": [
+        "age",
+        "state",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "age",
+          "operator": "GTE",
+          "value": "60"
+        },
+        {
+          "question": "state",
+          "operator": "EQ",
+          "value": "TN"
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "200000"
+        }
+      ],
+      "documents": [
+        "Age proof",
+        "Residence proof",
+        "Income certificate"
+      ],
+      "page": 5
+    },
+    {
+      "name": "Youth Skill Development Grant",
+      "category": "Skill Development",
+      "benefit": "Rs 10,000 one-time",
+      "description": "Illustrative support for unemployed youth in skill training.",
+      "questions": [
+        "age",
+        "unemployed",
+        "training"
+      ],
+      "conditions": [
+        {
+          "question": "age",
+          "operator": "BETWEEN",
+          "value": [
+            "18",
+            "35"
+          ]
+        },
+        {
+          "question": "unemployed",
+          "operator": "EQ",
+          "value": true
+        },
+        {
+          "question": "training",
+          "operator": "EQ",
+          "value": true
+        }
+      ],
+      "documents": [
+        "Age proof",
+        "Unemployment self-declaration",
+        "Skill-training enrollment proof"
+      ],
+      "page": 6
+    },
+    {
+      "name": "Disability Education Assistance",
+      "category": "Education",
+      "benefit": "Rs 20,000/year",
+      "description": "Illustrative financial assistance for students with disabilities.",
+      "questions": [
+        "disability",
+        "age",
+        "studying"
+      ],
+      "conditions": [
+        {
+          "question": "disability",
+          "operator": "GTE",
+          "value": "40"
+        },
+        {
+          "question": "age",
+          "operator": "BETWEEN",
+          "value": [
+            "16",
+            "30"
+          ]
+        },
+        {
+          "question": "studying",
+          "operator": "EQ",
+          "value": true
+        }
+      ],
+      "documents": [
+        "Disability certificate",
+        "Age proof",
+        "School or college bonafide certificate"
+      ],
+      "page": 7
+    },
+    {
+      "name": "Small Business Startup Support",
+      "category": "Entrepreneurship",
+      "benefit": "Rs 25,000 one-time",
+      "description": "Illustrative support for eligible first-time entrepreneurs.",
+      "questions": [
+        "age",
+        "first",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "age",
+          "operator": "BETWEEN",
+          "value": [
+            "21",
+            "45"
+          ]
+        },
+        {
+          "question": "first",
+          "operator": "EQ",
+          "value": true
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "500000"
+        }
+      ],
+      "documents": [
+        "Age proof",
+        "Income certificate",
+        "First-time entrepreneur declaration",
+        "Business proposal"
+      ],
+      "page": 8
+    },
+    {
+      "name": "School Excellence Scholarship",
+      "category": "Education",
+      "benefit": "Rs 6,000/year",
+      "description": "Illustrative merit support for secondary school students.",
+      "questions": [
+        "class",
+        "marks",
+        "state",
+        "income"
+      ],
+      "conditions": [
+        {
+          "question": "class",
+          "operator": "IN",
+          "value": [
+            "10",
+            "11",
+            "12"
+          ]
+        },
+        {
+          "question": "marks",
+          "operator": "GTE",
+          "value": "75"
+        },
+        {
+          "question": "state",
+          "operator": "EQ",
+          "value": "TN"
+        },
+        {
+          "question": "income",
+          "operator": "LTE",
+          "value": "300000"
+        }
+      ],
+      "documents": [
+        "School bonafide certificate",
+        "Previous examination marksheet",
+        "Residence proof",
+        "Income certificate"
+      ],
+      "page": 9
+    }
+  ]
+}
